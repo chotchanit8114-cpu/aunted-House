@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="th"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <title>หอผีสิง – Haunted Dorm</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap">
 <script>(function(){var u=['https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js','https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js','https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js'],i=0;function n(){if(typeof Peer!=='undefined'||i>=u.length)return;var e=document.createElement('script');e.src=u[i++];e.onerror=n;document.head.appendChild(e)}n()})()</script>
@@ -46,7 +46,7 @@ button:active:not(:disabled){transform:scale(.97)}button:disabled{opacity:.45}bu
 .sub{margin:0;color:var(--mut);font-size:14px}
 #nm,#cd,#pw{font:inherit;font-size:18px;text-align:center;background:#0d0b2b;color:var(--fg);border:2px solid var(--line);border-radius:14px;padding:12px}#nm:focus,#cd:focus,#pw:focus{outline:none;border-color:var(--lamp)}
 #mem{margin:0;font-size:13px;color:var(--moon)}
-.ch{display:flex;gap:12px;align-items:center;width:100%}.ch.sel{border-color:var(--lamp);background:#3a3380}.ch .em{font-size:36px}.ch b{display:block;font-size:16px}.ch small{color:var(--mut);font-size:12px;line-height:1.4}
+.ch{display:flex;gap:12px;align-items:center;width:100%}.ch{min-height:78px}.ch>span:last-child{flex:1;min-width:0}.ch.sel{border-color:var(--lamp);background:#3a3380}.ch .em{font-size:36px}.ch b{display:block;font-size:16px}.ch small{color:var(--mut);font-size:12px;line-height:1.4}
 #coinb{font-size:34px;font-weight:700;color:var(--lamp);background:#0d0b2b;border:2px solid var(--lamp);border-radius:16px;padding:6px}
 .coin{margin:0;font-size:22px;color:var(--lamp);font-weight:700}
 #gear{position:fixed;right:12px;top:calc(10px + env(safe-area-inset-top,0px));padding:4px 8px;font-size:16px;z-index:10}
@@ -84,7 +84,7 @@ const CAT={
  atm:{n:'ตู้ ATM',i:'🏧',g:50,e:20,t:'atm',d:'อุปกรณ์เพิ่มรายได้ ทำให้เตียงผลิตทองเพิ่มขึ้น +10% ต่อเลเวล'},
  repair:{n:'เครื่องซ่อมประตู',i:'🔧',g:40,e:15,t:'repair',d:'อุปกรณ์ซ่อมแซม ฟื้นเลือดประตูให้เองทุกวินาที +15 HP/วิ ต่อเลเวล'},
  moon:{n:'กระถางดอกไม้ดวงจันทร์',i:'🌸',g:60,e:0,t:'moonpot',only:'d',d:'อุปกรณ์เฉพาะราชาดวงจันทร์ วางได้ 1 อัน อัปได้สูงสุด Lv9 ฟื้นประตูเพิ่มตามเลเวล ถึง 1,000 HP/วิ ที่ Lv9'},
- abyss:{n:'ปืนอเวจี',i:'🕳️',g:96,e:0,dmg:220,mx:5000,spd:.4,rng:320,t:'turret',only:'e',d:'ปืนพิเศษ วางได้สูงสุด 6 ป้อม ดาเมจเริ่มน้อยแล้วโตตามเลเวลถึง 5,000 ที่ Lv15 ยิงคลื่นเลเซอร์ดำขอบม่วง'},
+ abyss:{n:'ปืนอเวจี',i:'🕳️',g:96,e:0,dmg:220,mx:2500,spd:.6,rng:320,t:'turret',only:'e',d:'ปืนพิเศษ วางได้สูงสุด 6 ป้อม ดาเมจเริ่มน้อยแล้วโตตามเลเวลถึง 2,500 ที่ Lv15 ยิงช้า 0.6 วิ ยิงคลื่นเลเซอร์ดำ'},
  bow:{n:'ธนูประกายแสง',i:'🏹',g:120,e:0,dmg:220,mx:5000,spd:.4,rng:280,t:'turret',only:'f',d:'อาวุธพิเศษนางฟ้า วางได้สูงสุด 8 ป้อม ยิงเร็ว 0.4 วิ ดาเมจโตตามเลเวลถึง 5,000 ที่ Lv15 ลูกธนูโค้งมีประกายแสง'}};
 CAT.dragon={n:'มังกร',i:'🐉',g:300,e:0,dmg:300,mx:40000,spd:.1,rng:300,t:'turret',only:'g',d:'วางได้ 1 ตัว พ่นลำแสงไฟไล่เฉดสี ยิงทุก 0.1 วิ ดาเมจโตตามเลเวลถึง 40,000 ที่ Lv15'};
 CAT.phoenix={n:'ฟีนิกซ์',i:'🦅',g:300,e:0,dmg:4000,mx:400000,spd:2,rng:300,t:'turret',only:'g',d:'วางได้ 1 ตัว ทุก 2 วิ เรียกฟีนิกซ์ระเบิดเป็นไฟวงกลมใส่ศัตรู ดาเมจถึง 400,000 ที่ Lv15 · ฟื้นประตู 50% ทุก 50 วินาที'};
@@ -112,7 +112,7 @@ const CH={
  b:{n:'ช่างประจำหอ',i:'🧰',cost:0,d:'ประตูซ่อมตัวเองเพิ่ม +4 HP/วินาที'},
  c:{n:'ราชานิทรา',i:'👑',cost:40,d:'ทองจากเตียง ×1.5 · ป้อมยิงเร็ว +20% · ประตูฟื้นคืนชีพ 1 ครั้ง · อัปเกรดได้สูงกว่า'},
  d:{n:'ราชาแห่งดวงจันทร์',i:'🌙',cost:300,d:'กระถางดอกไม้ดวงจันทร์ Lv9 · ฟื้นเลือดประตูโตตามเลเวล ถึง 1,000 HP/วินาที · ทอง ×2.2 · ยิงเร็ว +30% · ฟื้นคืนชีพ'},
- e:{n:'ปีศาจอเวจีนิทรา',i:'😈',cost:1100,d:'ทอง ×0.8 · ปืนอเวจี (ดาเมจโตตามเลเวล ถึง 5,000 ที่ Lv15 วางได้ 6 ป้อม) แทนปืนทั่วไป'},
+ e:{n:'ปีศาจอเวจีนิทรา',i:'😈',cost:1100,d:'ทอง ×0.8 · ปืนอเวจี (ดาเมจโตตามเลเวล ถึง 2,500 ที่ Lv15 วางได้ 6 ป้อม) แทนปืนทั่วไป'},
  f:{n:'นางฟ้าตกสวรรค์',i:'😇',cost:6000,d:'ทอง ×2 · พลังงาน ×1.5 · เลือดประตู ×1.4 · ธนูประกายแสง 8 ป้อม (ยิง 0.4วิ ดาเมจถึง 5,000 ที่ Lv15) แทนปืนทั่วไป · ผีตาย ฟื้นประตู 10% ของเลือดผี · ลูกศรกระจายโดนผีอย่างน้อย 2 ตัว · ออร่าแดงหมุนที่ประตู'}};
 CH.g={n:'มังกรกับฟีนิกซ์',i:'🐲',cost:15000,d:'ไม่มีปืนทั่วไป · มังกร (ลำแสงไฟ 40,000 ทุก 0.1วิ) + ฟีนิกซ์ (ระเบิดไฟ 400,000 ทุก 2วิ ฟื้นประตู 50% ทุก 50วิ) อย่างละ 1 · ทอง ×2 พลังงาน ×2 · เลือดประตู ×3 · ฟื้นคืนชีพประตู 3 ครั้ง · ออร่าประตูเขียว-แดง'};
 const FL={def:{n:'พื้นปกติ',c:['#3b3573','#2a2557'],cost:0},mint:{n:'มิ้นต์',c:['#2f6b5e','#1f4a42'],cost:20,b:{g0:20},t:'ทองเริ่ม +20'},rose:{n:'กุหลาบ',c:['#7a3a5c','#4f2340'],cost:80,b:{gm:1.05},t:'ทองเตียง +5%'},ocean:{n:'มหาสมุทร',c:['#2b5a9a','#183a66'],cost:200,b:{dr:2},t:'ประตูฟื้น +2 HP/วิ'},gold:{n:'ทองคำ',c:['#a8832a','#6e5316'],cost:500,b:{g0:60,gm:1.08},t:'ทองเริ่ม +60 · ทองเตียง +8%'},galaxy:{n:'กาแล็กซี่ ✨',c:['#4b2a9c','#140a3a'],cost:1000,b:{g0:120,gm:1.1,dm:1.1},t:'ทองเริ่ม +120 · ทอง +10% · เลือดประตู +10%'}};
@@ -242,9 +242,9 @@ class GameEngine{
  speed(){this.sp=this.sp>=8?1:this.sp*2;$('spb').textContent='⏩ x'+this.sp}
  toast(s){const t=$('toast');t.textContent=s;t.classList.add('show');clearTimeout(this.tt);this.tt=setTimeout(()=>t.classList.remove('show'),3200)}
  shot(x1,y1,x2,y2,k,loc,nb){
-  this.beams.push({x1,y1,x2,y2,t:k==='bow'?.28:k==='phoenix'?.5:.14,k,nb});if(loc)this.outB.push([x1|0,y1|0,x2|0,y2|0,k]);
+  this.beams.push({x1,y1,x2,y2,t:k==='bow'?.34:k==='phoenix'?.5:.14,k,nb});if(loc)this.outB.push([x1|0,y1|0,x2|0,y2|0,k]);
   if(k==='bow')for(let i=0;i<4;i++){const a=Math.random()*6.28,v=15+Math.random()*30;this.parts.push({x:x2,y:y2,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:.3,z:2+Math.random()*1.5,c:i%3?'#fff7c2':'#ffb3f0'})}
-  if(k==='abyss')for(let i=0;i<3;i++){const a=Math.random()*6.28,v=10+Math.random()*25;this.parts.push({x:x2,y:y2,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:.3,z:1.5+Math.random()*1.5,c:i%2?'#b388ff':'#e8d5ff'})}}
+  if(0)for(let i=0;i<3;i++){const a=Math.random()*6.28,v=10+Math.random()*25;this.parts.push({x:x2,y:y2,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:.3,z:1.5+Math.random()*1.5,c:i%2?'#b388ff':'#e8d5ff'})}}
  /* ---- screens ---- */
  renderAuth(m=''){
   this.state='MENU';NET.leave();this.vip=false;this.hd=false;this.name='';$('scr').style.display='flex';
@@ -280,7 +280,7 @@ class GameEngine{
   <button class="cta" onclick="G.start()">เล่นคนเดียว 💤</button><button class="cta" onclick="G.renderMP()">เล่นกับเพื่อน 👥</button><button onclick="G.renderAuth()" style="text-align:center">ออกจากระบบ</button></div>`;
   this.renderProf()}
  renderShop(){const p=this.prof,fl=p.floors||['def'],bds=p.beds||['def'];
-  const row=(kind,k,f,own,on,pv)=>`<button class="ch${on?' sel':''}" style="padding:12px" onclick="G.buy('${kind}','${k}')"><span class="em" style="${pv};width:46px;height:46px;border-radius:10px;display:inline-block;flex:none"></span><span><b style="font-size:19px">${f.n}</b><small style="font-size:15px;display:block">${on?'กำลังใช้':own?'แตะเพื่อสวมใส่':'ราคา 💎 '+f.cost}</small>${f.t?`<small style="font-size:13px;color:var(--moon);display:block">✨ ${f.t}</small>`:''}</span></button>`;
+  const row=(kind,k,f,own,on,pv)=>`<button class="ch${on?' sel':''}" style="padding:12px" onclick="G.buy('${kind}','${k}')"><span class="em" style="${pv};width:52px;height:52px;border-radius:10px;display:inline-block;flex:none"></span><span><b style="font-size:19px">${f.n}</b><small style="font-size:15px;display:block">${on?'กำลังใช้':own?'แตะเพื่อสวมใส่':'ราคา 💎 '+f.cost}</small>${f.t?`<small style="font-size:13px;color:var(--moon);display:block">✨ ${f.t}</small>`:''}</span></button>`;
   $('scr').innerHTML=`<div class="card"><div class="logo" style="font-size:64px">🛍️</div><h1>ร้านค้า</h1><p class="sub" style="font-size:16px">คริสตัลได้จากโหมดนรกเท่านั้น (นาทีละ 1 💎)</p><div id="coinb" style="font-size:40px">💎 ${this.vip?'∞':p.crystals||0}</div><h3 style="margin:6px 0 0;font-size:20px">🟫 แผ่นพื้น</h3>`+Object.keys(FL).map(k=>row('floor',k,FL[k],fl.includes(k),p.floor===k,`background:linear-gradient(${FL[k].c[0]},${FL[k].c[1]})`)).join('')+`<h3 style="margin:6px 0 0;font-size:20px">🛏️ ลายเตียง</h3>`+Object.keys(BD).map(k=>row('bed',k,BD[k],bds.includes(k),p.bed===k,`background:linear-gradient(${BD[k].c[0]},${BD[k].c[1]})`)).join('')+`<h3 style="margin:6px 0 0;font-size:20px">🪴 ของตกแต่งห้อง</h3>`+Object.keys(DECOR).map(k=>{const d=DECOR[k],own=(p.decor||[]).includes(k);return`<button class="ch${own?' sel':''}" style="padding:12px" onclick="G.buy('decor','${k}')"><canvas data-k="${k}" width="52" height="52" style="width:52px;height:52px;flex:none;background:#0d0b2b;border-radius:10px"></canvas><span><b style="font-size:19px">${d.n}</b><small style="font-size:15px;display:block">${own?'ซื้อแล้ว (ใช้ในห้องอัตโนมัติ)':'ราคา 💎 '+d.p}</small><small style="font-size:13px;color:var(--moon);display:block">✨ ${d.d}</small></span></button>`}).join('')+`<button onclick="G.renderMenu()" style="text-align:center;font-size:17px">กลับ</button></div>`;
   document.querySelectorAll('#scr canvas[data-k]').forEach(cv=>{const c=cv.getContext('2d');c.scale(.8,.8);drawDeco(c,cv.dataset.k,32,34)})}
  buy(kind,k){if(kind==='decor'){const p=this.prof,d=DECOR[k],o=p.decor=p.decor||[];if(o.includes(k)){this.toast('มีของชิ้นนี้แล้ว');return}const c=p.crystals||0;if(!this.vip&&c<d.p){this.toast(`คริสตัลไม่พอ (มี ${c}/${d.p})`);return}if(!this.vip)p.crystals=c-d.p;o.push(k);Store.save(this.name,p);this.renderShop();return}const p=this.prof,T=kind==='bed'?BD:FL,L=kind==='bed'?'beds':'floors',f=T[k];p[L]=p[L]||['def'];
@@ -388,7 +388,7 @@ class GameEngine{
   if(!this.my){const n=this.state==='PLAYING'&&this.nearBed(),s=$('sleep');s.disabled=!n;s.className='cta'+(n?' go':'');s.textContent=n?'💤 กดนอน (ล็อกประตู)':'เดินไปที่เตียง'}
   const h=$('dhp');if(h&&this.door)h.textContent=`${Math.ceil(this.door.hp)}/${this.door.max}`}
  pos(ev){const b=this.cv.getBoundingClientRect(),s=Math.min(b.width/W,b.height/H),ox=(b.width-W*s)/2,oy=(b.height-H*s)/2;return{x:(ev.clientX-b.left-ox)/s,y:(ev.clientY-b.top-oy)/s}}
- click(ev){
+ click(ev){if(this.pinch)return;
   if(this.state!=='PLAYING'||!this.my)return;const{x,y}=this.pos(ev),m=this.my;
   for(let i=0;i<12;i++){const q=tileRect(m,i);if(x>=q.x-3&&x<=q.x+q.s+3&&y>=q.y-3&&y<=q.y+q.s+3){this.sel=i;this.renderTile();return}}
   const b=bedR(m);if(x>b.x&&x<b.x+b.w&&y>b.y&&y<b.y+b.h){this.renderBed();return}
@@ -453,13 +453,10 @@ class GameEngine{
   if(p.sleeping){c.font='30px serif';c.fillStyle='#fff';c.fillText('😴',p.x,p.y);c.font='bold 13px sans-serif';c.fillStyle='#9fe7ff';c.fillText('z',p.x+18,p.y-18-Math.sin(t*3)*3)}
   else{c.font='28px serif';c.shadowColor='#9fe7ff';c.shadowBlur=10;c.fillStyle='#fff';c.fillText(CH[this.ch].i,p.x,p.y);c.shadowBlur=0}
   this.gs.forEach(g=>this.drawGhost(g,t));
-  this.beams.forEach(b=>{c.globalAlpha=b.k==='bow'?Math.max(0,b.t/.28):Math.min(1,b.t/.1);c.shadowBlur=8;
-   if(b.k==='dragon'||b.k==='phoenix'){this.fx(b)}else if(b.k==='bow'){
-    const dx=b.x2-b.x1,dy=b.y2-b.y1,l=Math.hypot(dx,dy)||1,cx=(b.x1+b.x2)/2-dy/l*34,cy=(b.y1+b.y2)/2+dx/l*34;
-    c.strokeStyle='#ffe9a8';c.lineWidth=2.4;c.shadowColor='#ffd54f';c.shadowBlur=8;if(!b.nb){const P=new Path2D();P.moveTo(b.x1,b.y1);P.quadraticCurveTo(cx,cy,b.x2,b.y2);c.strokeStyle='#ffc233';c.lineWidth=3.6;c.stroke(P);c.strokeStyle='#fff';c.shadowBlur=0;c.lineWidth=1.3;c.stroke(P);
-    const a=Math.atan2(b.y2-cy,b.x2-cx);c.fillStyle='#fffbe0';c.beginPath();c.moveTo(b.x2,b.y2);c.lineTo(b.x2-11*Math.cos(a-.4),b.y2-11*Math.sin(a-.4));c.lineTo(b.x2-11*Math.cos(a+.4),b.y2-11*Math.sin(a+.4));c.fill()}const pr=1-b.t/.28;c.strokeStyle='#fff3b0';c.lineWidth=2;c.beginPath();c.arc(b.x2,b.y2,10+pr*22,0,7);c.stroke();c.strokeStyle='#ffb3f0';c.beginPath();for(let k=0;k<4;k++){const s=k*1.5708+pr*2,l=19-pr*6;c.moveTo(b.x2,b.y2);c.lineTo(b.x2+Math.cos(s)*l,b.y2+Math.sin(s)*l)}c.stroke()}
+  this.beams.forEach(b=>{c.globalAlpha=Math.min(1,b.t/.12);c.shadowBlur=8;
+   if(b.k==='dragon'||b.k==='phoenix'){this.fx(b)}else if(b.k==='bow'){this.bw(b)}
    else{const[col,w]=BEAM[b.k];c.strokeStyle=col;c.lineWidth=w;c.shadowColor=col;
-    if(b.k==='abyss'){c.strokeStyle='#b388ff';c.lineWidth=w+5;c.shadowColor='#b388ff';c.beginPath();c.moveTo(b.x1,b.y1);c.lineTo(b.x2,b.y2);c.stroke();c.strokeStyle=col;c.lineWidth=w;c.beginPath();c.arc(b.x2,b.y2,5+(1-b.t/.14)*16,0,7);c.stroke()}
+    if(0){c.strokeStyle='#b388ff';c.lineWidth=w+5;c.shadowColor='#b388ff';c.beginPath();c.moveTo(b.x1,b.y1);c.lineTo(b.x2,b.y2);c.stroke();c.strokeStyle=col;c.lineWidth=w;c.beginPath();c.arc(b.x2,b.y2,5+(1-b.t/.14)*16,0,7);c.stroke()}
     c.strokeStyle=col;c.lineWidth=w;c.beginPath();c.moveTo(b.x1,b.y1);c.lineTo(b.x2,b.y2);c.stroke()}
    c.shadowBlur=0;c.globalAlpha=1});
   this.parts.forEach(q=>{c.globalAlpha=Math.min(1,q.t*2);const z=q.z||3;c.fillStyle=q.c||'#fff7c2';c.shadowColor=q.c||'#ffd54f';c.shadowBlur=8;c.fillRect(q.x-z/2,q.y-z/2,z,z)});c.shadowBlur=0;c.globalAlpha=1;
@@ -475,6 +472,17 @@ class GameEngine{
   else{c.fillStyle='rgba(180,120,255,.3)';c.beginPath();c.arc(b.x+22,y0+h/2,18,0,7);c.fill();for(let i=0;i<16;i++){c.fillStyle=`rgba(255,255,255,${.3+.6*Math.abs(Math.sin(t*2+i))})`;c.fillRect(b.x+3+(i*17%38),y0+3+(i*29%(h-6)),2,2)}}
   c.restore()}
  fc(){return(FL[this.prof.floor]||FL.def).c}
+ bw(b){const c=this.c,dx=b.x2-b.x1,dy=b.y2-b.y1,l=Math.hypot(dx,dy)||1,k=Math.min(70,l*.28),cx=(b.x1+b.x2)/2-dy/l*k,cy=(b.y1+b.y2)/2+dx/l*k,pr=1-b.t/.34;
+  const Q=u=>{const a=1-u;return[a*a*b.x1+2*a*u*cx+u*u*b.x2,a*a*b.y1+2*a*u*cy+u*u*b.y2]};
+  c.lineCap='round';
+  if(!b.nb){const h=Math.min(1,pr*2.2),t0=Math.max(0,h-.5),N=16;
+   for(let i=0;i<N;i++){const u0=t0+(h-t0)*i/N,u1=t0+(h-t0)*(i+1)/N,p0=Q(u0),p1=Q(u1),f=(i+1)/N;
+    c.strokeStyle=`rgba(255,${190+f*65|0},${130+f*110|0},${f*f})`;c.lineWidth=1+f*4.5;c.shadowColor='#ffd54f';c.shadowBlur=12*f;c.beginPath();c.moveTo(p0[0],p0[1]);c.lineTo(p1[0],p1[1]);c.stroke()}
+   for(let i=0;i<6;i++){const u=t0+(h-t0)*((i*.37+pr*3)%1),p=Q(u),z=1.5+Math.abs(Math.sin(i*2+pr*20))*1.8;c.fillStyle=i%2?'#fff7c2':'#ffb3f0';c.shadowColor=c.fillStyle;c.shadowBlur=8;c.beginPath();c.arc(p[0]+Math.sin(i*9+pr*30)*3,p[1]+Math.cos(i*7+pr*30)*3,z,0,7);c.fill()}
+   const p=Q(h),q=Q(Math.max(0,h-.05)),a=Math.atan2(p[1]-q[1],p[0]-q[0]);
+   c.shadowColor='#fff3b0';c.shadowBlur=16;c.fillStyle='#fffdf0';c.beginPath();c.moveTo(p[0]+Math.cos(a)*11,p[1]+Math.sin(a)*11);c.lineTo(p[0]+Math.cos(a+2.4)*7,p[1]+Math.sin(a+2.4)*7);c.lineTo(p[0]+Math.cos(a)*2,p[1]+Math.sin(a)*2);c.lineTo(p[0]+Math.cos(a-2.4)*7,p[1]+Math.sin(a-2.4)*7);c.fill()}
+  if(pr>.45){const e=Math.min(1,(pr-.45)/.55);c.globalAlpha*=1-e;c.shadowBlur=10;c.shadowColor='#ffd54f';c.strokeStyle='#fff3b0';c.lineWidth=2.5*(1-e)+.5;c.beginPath();c.arc(b.x2,b.y2,6+e*26,0,7);c.stroke();c.strokeStyle='#ffb3f0';c.lineWidth=2;c.beginPath();for(let i=0;i<8;i++){const s=i*.785+e,r0=6+e*10,r1=12+e*22;c.moveTo(b.x2+Math.cos(s)*r0,b.y2+Math.sin(s)*r0);c.lineTo(b.x2+Math.cos(s)*r1,b.y2+Math.sin(s)*r1)}c.stroke()}
+  c.lineCap='butt'}
  fx(b){const c=this.c;
   if(b.k==='dragon'){const L=[[40,'rgba(213,0,0,.35)','#ff1744'],[28,'rgba(255,87,34,.55)','#ff5722'],[18,'rgba(255,193,7,.8)','#ffc107'],[7,'#fffde7','#fff']],fl=1+.1*Math.sin(b.t*110);c.lineCap='round';
    L.forEach(([w,c1,c2],i)=>{const g=c.createLinearGradient(b.x1,b.y1,b.x2,b.y2);g.addColorStop(0,c2);g.addColorStop(.55,c1);g.addColorStop(1,i<2?'rgba(255,23,68,.9)':c1);c.strokeStyle=g;c.lineWidth=w*fl;c.shadowColor='#ff6d00';c.shadowBlur=i?0:16;c.beginPath();c.moveTo(b.x1,b.y1);c.lineTo(b.x2,b.y2);c.stroke()});
@@ -509,5 +517,9 @@ class GameEngine{
   else this.rr(gx-5,r.dy-30,10,8,3,'#9c6b4e')}
 }
 const G=new GameEngine();
+(()=>{const s=$('stage');let d0=0,z0=1;const D=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+s.addEventListener('touchstart',e=>{if(e.touches.length===2){d0=D(e.touches);z0=G.zm||1;G.pinch=1}},{passive:true});
+s.addEventListener('touchmove',e=>{if(e.touches.length===2&&d0){e.preventDefault();G.zm=Math.min(2.5,Math.max(.6,z0*D(e.touches)/d0));G.cv.style.width=G.zm*100+'%'}},{passive:false});
+s.addEventListener('touchend',e=>{if(e.touches.length<2){d0=0;setTimeout(()=>G.pinch=0,200)}});})();
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 </script></body></html>
