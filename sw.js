@@ -1,6 +1,6 @@
 /* หอผีสิง service worker : เล่นออฟไลน์ได้หลังเปิดครั้งแรก
    อัปเดตเกมแล้วให้เปลี่ยนเลข V เพื่อบังคับโหลดใหม่ */
-const V = 'hd-v3', CORE = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
+const V = 'hd-v4', CORE = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(V).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x !== V).map(x => caches.delete(x)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {
