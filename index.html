@@ -869,8 +869,8 @@ const Store = { k: n => 'hd1:' + n.trim().toLowerCase(),
         localStorage.setItem(this.k(n), JSON.stringify(p));
     }
     catch (e) {
-        if (!Store.w) {
-            Store.w = 1;
+        if (!Store.w || Date.now() - Store.w > 60000) {
+            Store.w = Date.now();
             try {
                 G.toast('เซฟไม่สำเร็จ: เบราว์เซอร์บล็อกการเก็บข้อมูล/พื้นที่เต็ม/โหมดส่วนตัว');
             }
@@ -6085,6 +6085,84 @@ const G = new GameEngine();
         f.style.setProperty('--fa', fa);
         f.style.setProperty('--fr', fr + '%');
     };
+})();
+/* ===== ซิงค์เซฟข้ามแท็บ: กันแท็บเก่าเขียนทับความคืบหน้าของอีกแท็บ ===== */
+(() => {
+    const adopt = o => { Object.keys(G.prof).forEach(k => delete G.prof[k]); Object.assign(G.prof, o); };
+    addEventListener('storage', e => {
+        if (!G.name || !G.prof || e.key !== Store.k(G.name) || !e.newValue)
+            return;
+        let o;
+        try { o = JSON.parse(e.newValue); } catch (x) { return; }
+        if (G.state === 'PLAYING') {
+            G.extWrite = 1;
+            G.toast('⚠️ เปิดเกมบัญชีนี้ซ้อนหลายแท็บ — ปิดแท็บอื่นเพื่อกันเซฟทับกัน');
+            return;
+        }
+        adopt(o);
+        G.toast('ซิงค์เซฟจากอีกแท็บแล้ว');
+    });
+    const e0 = G.end.bind(G);
+    G.end = function (st) {
+        if (this.extWrite && this.name) {
+            try { const o = Store.raw(this.name); if (o) adopt(o); } catch (x) { }
+            this.extWrite = 0;
+        }
+        return e0(st);
+    };
+})();
+/* ===== บัญชีที่เคยเข้า (เรียงอันที่ใช้บ่อยสุดไว้บนสุด) · เก็บเฉพาะค่าแฮชของรหัสผ่าน ไม่เก็บรหัสจริง ===== */
+(() => {
+    const K = 'hd1acct', MAX = 6;
+    const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    const ld = () => { try { const a = JSON.parse(localStorage.getItem(K)); return Array.isArray(a) ? a.filter(x => x && x.n && x.h) : []; } catch (e) { return []; } };
+    const sv = a => { try { localStorage.setItem(K, JSON.stringify(a)); } catch (e) { } };
+    const srt = a => a.sort((x, y) => (y.c - x.c) || (y.t - x.t));
+    const st = document.createElement('style');
+    st.textContent = '.acl{display:flex;flex-direction:column;gap:6px;margin:6px 0 10px}.acr{display:flex;gap:6px}.acr .acb{flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;text-align:left}.acr .acb small{opacity:.75;font-size:12px;white-space:nowrap}.acr .acx{flex:none;width:44px;padding:0;text-align:center}';
+    document.head.appendChild(st);
+    G.acctTouch = function (n, h) {
+        const a = ld(), i = a.findIndex(x => x.n.toLowerCase() === n.toLowerCase());
+        if (i >= 0) { a[i].c = (a[i].c || 0) + 1; a[i].t = Date.now(); a[i].h = h; a[i].n = n; }
+        else a.push({ n, h, c: 1, t: Date.now() });
+        srt(a);
+        while (a.length > MAX) { let j = a.length - 1; if (a[j].n.toLowerCase() === n.toLowerCase()) j--; a.splice(j, 1); }
+        sv(a);
+    };
+    G.acctDel = function (i) { const a = srt(ld()); a.splice(i, 1); sv(a); this.renderAuth(); };
+    G.quickLogin = function (i) {
+        const x = srt(ld())[i];
+        if (!x) return;
+        const s = Store.raw(x.n);
+        if (!s) { const a = srt(ld()); a.splice(i, 1); sv(a); this.renderAuth('ไม่พบเซฟของ ' + x.n + ' ในเครื่องนี้ (อาจถูกล้าง) — กู้คืนจากรหัสสำรองได้ในตั้งค่า'); return; }
+        if (s.pw && s.pw !== x.h) { this.renderAuth('รหัสผ่านของ ' + x.n + ' เปลี่ยนแล้ว กรุณาพิมพ์เข้าใหม่'); return; }
+        this.name = x.n;
+        this.prof = Store.load(x.n);
+        if (!this.prof.pw) this.prof.pw = x.h;
+        Store.save(x.n, this.prof);
+        this.ch = this.prof.unlocked.includes(this.prof.char) ? this.prof.char : 'a';
+        this.acctTouch(x.n, x.h);
+        this.renderMenu();
+    };
+    const au0 = G.auth.bind(G);
+    G.auth = function (reg) {
+        const n = ($('nm') || {}).value, pw = ($('pw') || {}).value, nn = n ? n.trim() : '';
+        const r = au0(reg);
+        try { if (nn && this.name === nn) this.acctTouch(nn, hs(nn.toLowerCase() + ':' + pw)); } catch (e) { }
+        return r;
+    };
+    const ra0 = G.renderAuth.bind(G);
+    G.renderAuth = function (m) {
+        ra0(m);
+        try {
+            const a = srt(ld());
+            const sub = document.querySelector('#scr .card .sub');
+            if (!a.length || !sub) return;
+            sub.insertAdjacentHTML('afterend', '<div class="acl"><small style="opacity:.8">👤 บัญชีที่เคยเข้า — แตะเพื่อเข้าเกมเลย</small>' + a.map((x, i) => '<div class="acr"><button class="acb" onclick="G.quickLogin(' + i + ')"><span>' + (i === 0 ? '⭐ ' : '') + esc(x.n) + '</span><small>เข้า ' + (x.c || 1) + ' ครั้ง</small></button><button class="acx" onclick="G.acctDel(' + i + ')" title="ลบออกจากรายการ">✕</button></div>').join('') + '</div>');
+        } catch (e) { }
+    };
+    /* หน้าล็อกอินแรกถูกวาดก่อนติดตั้งตัวเสริมนี้ → วาดซ้ำให้รายการบัญชีขึ้นตั้งแต่เปิดเกม */
+    try { if (document.getElementById('nm') && !G.name) G.renderAuth(); } catch (e) { }
 })();
 </script>
 <script>'use strict';
